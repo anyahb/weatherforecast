@@ -9,6 +9,7 @@ function App() {
     const [forecastIcon, setForecastIcon] = useState("")
     const [forecastLocation, setForecastLocation] = useState("")
     const [temperature, setTemperature] = useState("0")
+    const [result, setResult] = useState("0")
 
     // fact
     const [forecastTime, setForecastTime] = useState("")
@@ -29,51 +30,18 @@ function App() {
 
             .then((res) => {
                 setForecastDays(res.forecast.forecastday)
-                console.log("resforecast", res.forecast.forecastday)
-                console.log(res)
-                setTimeout(() => {
-                    getTime()
-                }, 2000)
-            })
 
-    }
+                getTime(res.forecast.forecastday)
 
-
-    const getIcon = () => {
-        fetch("http://api.weatherapi.com/v1/forecast.json?key=90bcae4386e744f082d174730222407&q=Washington DC&days=1")
-            .then((response) => {
-                return response.json()
-            })
-
-            .then((res) => {
                 const current = res.current
                 const finalIcon = current.condition.icon
                 setForecastIcon(finalIcon)
-            })
-    }
 
-
-    const getLocation = () => {
-        fetch("http://api.weatherapi.com/v1/forecast.json?key=90bcae4386e744f082d174730222407&q=Washington DC&days=1")
-            .then((response) => {
-                return response.json()
-            })
-
-            .then((res) => {
                 const finalLocation = `${res.location.name}, ${res.location.region}`
                 setForecastLocation(finalLocation)
             })
+
     }
-
-
-    // useEffect(() => {
-    //     getLocation()
-    // })
-
-
-    // useEffect(() => {
-    //     getIcon()
-    // })
 
 
     useEffect(() => {
@@ -84,12 +52,6 @@ function App() {
     const avgTempt = () => {
         let avg = forecastDays.map((x => x.date + " : " + x.day.avgtemp_c))
         setavgTemp(avg)
-        console.log(avg)
-        /* for (let i = 0; i < avg.length; i++){
-             console.log(avg[i].date + " : " + avg[i].day.avgtemp_c)
-         }*/
-        // console.log(avg)
-
     }
 
 
@@ -120,67 +82,37 @@ function App() {
     const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const d = new Date();
     let day = weekday[d.getDay()];
-
-
     let time = new Date().toLocaleTimeString([], {hour: '2-digit', minute: "2-digit"})
 
-    /*    let findTime = () => {
-            forecastDays.map((item, index) => {
-                const eachObj = item.hour //array of all 23 objects
+    // const currentHour = new Date().getHours()
+    const currentDay = forecastDays[0]
+    // const timeArray = currentDay?.hour ?? []
 
-                const timePeriods = eachObj.map(x => x.time) //array of time strings, for example ['2023-01-28 00:00', ... ]
-
-                for (let i = 0; i < timePeriods.length; i++) {
-                    const modifier = timePeriods[i].split(" ")
-                    const wholeHour = modifier[1] // 00:00, 01:00, 02:00
-                    const currentTime = time.slice(0, 2) + ":" + "00" // my current date
-                    if (currentTime === wholeHour) {
-                        let result = eachObj.find( // displaying the one with my time 05:00 = 05:00
-                            ({time}) => time === timePeriods[i]
-                        )
-
-                        console.log("result", result.temp_c) //getting the temperature value
-
-                    }
-                }
-
-            })
-        }
-
-        findTime()*/
-
-    let getTime = () => {
-
-
+    let getTime = (el) => {
         const currentHour = new Date().getHours()
-
-        console.log("curHour", currentHour)
-        const currentDay = forecastDays[0]
-
-
-        console.log(forecastDays)
+        const currentDay = el[0]
 
         const timeArray = currentDay?.hour ?? []
-        console.log("timeArray", timeArray)
-
-        const findIt = timeArray.find(item => {
+        const currentWeather = timeArray.find(item => {
             const wholeTime = item.time
             const onlyHours = wholeTime.split(" ")
             const timeStr = onlyHours[1]
             const responseHour = timeStr.split(":")[0]
-            console.log("reshour", responseHour)
             return responseHour === currentHour.toString()
         })
 
-        console.log("findit", findIt)
+        const laterHours = timeArray.filter(item => {
+            const wholeTime = item.time
+            const onlyHours = wholeTime.split(" ")
+            const timeStr = onlyHours[1]
+            const responseHour = timeStr.split(":")[0]
+            return responseHour >= currentHour.toString()
+        })
 
-        const temperature = findIt?.temp_f
+        const temperature = currentWeather?.temp_f
+        setTemperature(temperature)
 
-        console.log("temp", temperature)
-
-        // setTemperature()
-
-        console.log("findIt", findIt)
+        setResult(laterHours)
 
     }
 
@@ -192,11 +124,6 @@ function App() {
 
             <button onClick={avgTempt}>Average Temperature</button>*/}
 
-            <button onClick={() => {
-                console.log(forecastDays)
-                getTime()
-            }}>Confirm
-            </button>
 
             {forecastDays.map((item, index) => {
                 return (
@@ -209,21 +136,22 @@ function App() {
 
                             <img className='forecast__icon' src={forecastIcon}></img>
 
-                            <div className='forecast__title'>
-                                Weather
+                            <div className='forecast__temperature'>
+                                {temperature}°
                             </div>
 
-                            <div className="forecast__additional">
 
+                            <div className="forecast__additional">
                                 <div className="forecast__precipitation">Precipitation: {item.hour[0].precip_in}%</div>
                                 <div className="forecast__humidity">Humidity: {item.hour[0].humidity}%</div>
                                 <div className="forecast__wind">Wind: {item.hour[0].wind_mph} mph</div>
-                                <div className="forecast__temp">Temperature Now: {temperature}°</div>
+                                {/*  <div className="forecast__temp">Temperature Now: {temperature}°</div>*/}
                             </div>
 
                         </div>
 
                         <div className="forecast__right">
+                            <div className="forecast__title">Weather</div>
                             <div className="forecast__city">{forecastLocation}</div>
                             <div className="forecast__weekday">{day}, {dateFormat(item.date)}</div>
                             <div className="forecast__time">{time}</div>
@@ -238,9 +166,11 @@ function App() {
             <div className='container'>
 
                 {forecastDays.map((item, index) => {
+
+
                     return (
                         <div key={index} className="forecast-day">
-                            <div className="forecast-day__temp">
+                            {/*    <div className="forecast-day__temp">
                                 Average temperature: {item.day.avgtemp_c}
                             </div>
 
@@ -251,28 +181,38 @@ function App() {
                             <div>
                                 Sunset: {createTime(item.astro.sunset)}
 
-                            </div>
+                            </div>*/}
 
                             <div className="forecast-day__hourtemp">
-                                Average Temperature Hourly:
+                                Average Temperature:
                                 {
-                                    item.hour.map((elem, index) => {
+                                    result.map((elem, index) => {
+
                                         return (
-                                            <div key={index}>
-                                                {/*Hour: {dateFormat(elem.time)}*/}
-                                                Temperature: {elem.temp_c}
+
+                                            //
+                                            // {/* <div key={index}>
+                                            //      Hour: {everydayHour}
+                                            //  </div>*/}
+
+                                            <div>
+                                                <div> Hours: {elem.time}</div>
+                                                <div>Temperature: {elem.temp_f}°</div>
                                             </div>
+
+
                                         )
                                     })
+
                                 }
+
+
                             </div>
 
                         </div>
                     )
                 })}
             </div>
-
-
         </div>
     )
 }

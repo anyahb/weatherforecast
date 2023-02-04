@@ -56,10 +56,16 @@
 
 }
 
-.forecast__title {
+.forecast__temperature {
     font-family: reg-roboto, arial, sans-serif;
     font-size: 48px;
     color: #202124;
+}
+
+.forecast__title {
+    font-family: reg-roboto, arial, sans-serif;
+    color: #202124;
+    font-size: 22px;
 }
 
 .forecast {
