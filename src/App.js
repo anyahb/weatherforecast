@@ -1,5 +1,6 @@
 import {useState, useEffect} from "react"
 import './App.css'
+import Precipitation from './img/kek.png'
 
 
 function App() {
@@ -10,28 +11,21 @@ function App() {
     const [forecastLocation, setForecastLocation] = useState("")
     const [temperature, setTemperature] = useState("0")
     const [result, setResult] = useState("0")
-
-    // fact
-    const [forecastTime, setForecastTime] = useState("")
-    // fact
-
-
-// fact
-
-
-    // fact
+    const [allDays, setAllDays] = useState([])
 
 
     const getWeather = () => {
-        fetch("http://api.weatherapi.com/v1/forecast.json?key=90bcae4386e744f082d174730222407&q=Washington DC&days=1")
+        fetch("http://api.weatherapi.com/v1/forecast.json?key=90bcae4386e744f082d174730222407&q=Washington DC&days=3")
             .then((response) => {
                 return response.json()
             })
 
             .then((res) => {
+                console.log("now", res.forecast.forecastday)
                 setForecastDays(res.forecast.forecastday)
 
                 getTime(res.forecast.forecastday)
+
 
                 const current = res.current
                 const finalIcon = current.condition.icon
@@ -40,7 +34,19 @@ function App() {
                 const finalLocation = `${res.location.name}, ${res.location.region}`
                 setForecastLocation(finalLocation)
             })
+    }
 
+
+    const getAllDays = () => {
+        fetch("http://api.weatherapi.com/v1/forecast.json?key=90bcae4386e744f082d174730222407&q=Washington DC&days=3")
+            .then((response) => {
+                return response.json()
+            })
+
+            .then((res) => {
+                console.log("checkforsure", res.forecast.forecastday)
+                setAllDays(res.forecast.forecastday)
+            })
     }
 
 
@@ -48,9 +54,14 @@ function App() {
         getWeather()
     }, [])
 
+    useEffect(() => {
+        getAllDays()
+    }, [])
+
 
     const avgTempt = () => {
         let avg = forecastDays.map((x => x.date + " : " + x.day.avgtemp_c))
+        console.log(forecastDays)
         setavgTemp(avg)
     }
 
@@ -74,18 +85,18 @@ function App() {
     }
 
 
-    const hourTemp = () => {
-
-    }
-
-
     const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const d = new Date();
     let day = weekday[d.getDay()];
     let time = new Date().toLocaleTimeString([], {hour: '2-digit', minute: "2-digit"})
 
     // const currentHour = new Date().getHours()
+
+    console.log("fordays", forecastDays)
     const currentDay = forecastDays[0]
+    console.log("curDay", currentDay)
+
+
     // const timeArray = currentDay?.hour ?? []
 
     let getTime = (el) => {
@@ -111,10 +122,20 @@ function App() {
 
         const temperature = currentWeather?.temp_f
         setTemperature(temperature)
-
         setResult(laterHours)
-
     }
+
+
+    const getHours = (item) => {
+        const onlyHours = item.split(" ")
+        const timeStr = onlyHours[1]
+        return timeStr
+    }
+
+    console.log("forecastDays", forecastDays)
+
+
+
 
 
     return (
@@ -144,14 +165,18 @@ function App() {
                             <div className="forecast__additional">
                                 <div className="forecast__precipitation">Precipitation: {item.hour[0].precip_in}%</div>
                                 <div className="forecast__humidity">Humidity: {item.hour[0].humidity}%</div>
-                                <div className="forecast__wind">Wind: {item.hour[0].wind_mph} mph</div>
+                                <div className="forecast__wind">
+                                    <div>
+                                        Wind: {item.hour[0].wind_mph} mph
+                                    </div>
+                                </div>
                                 {/*  <div className="forecast__temp">Temperature Now: {temperature}°</div>*/}
                             </div>
 
                         </div>
 
                         <div className="forecast__right">
-                            <div className="forecast__title">Weather</div>
+                            <div className="forecast__title">Hourly Weather</div>
                             <div className="forecast__city">{forecastLocation}</div>
                             <div className="forecast__weekday">{day}, {dateFormat(item.date)}</div>
                             <div className="forecast__time">{time}</div>
@@ -163,9 +188,13 @@ function App() {
             })}
 
 
+
+
+
             <div className='container'>
 
                 {forecastDays.map((item, index) => {
+
 
 
                     return (
@@ -184,20 +213,38 @@ function App() {
                             </div>*/}
 
                             <div className="forecast-day__hourtemp">
-                                Average Temperature:
+
+
+                                <div className="forecast-day__date">{day}, {dateFormat(item.date)}</div>
                                 {
                                     result.map((elem, index) => {
 
                                         return (
+                                            <div className="forecast-day__container">
+                                                <div className="forecast-day__hours">
+                                                    {getHours(elem.time)}
+                                                </div>
+                                                <div className="forecast-day__temperature">{elem.temp_f}°</div>
 
-                                            //
-                                            // {/* <div key={index}>
-                                            //      Hour: {everydayHour}
-                                            //  </div>*/}
 
-                                            <div>
-                                                <div> Hours: {elem.time}</div>
-                                                <div>Temperature: {elem.temp_f}°</div>
+                                                <div className="forecast-day__condition">
+                                                    {elem.condition.text}
+                                                    <img src={elem.condition.icon}></img>
+                                                </div>
+
+
+
+                                                <div className="forecast-day__precipitation">
+                                                    <img src={Precipitation} alt="precipitation"/>
+                                                    <div>{elem.precip_in}%</div>
+                                                </div>
+
+                                                <div className="forecast-day__wind">
+                                                    <div>
+                                                        {elem.wind_mph} mph
+                                                    </div>
+                                                </div>
+
                                             </div>
 
 
@@ -206,13 +253,18 @@ function App() {
 
                                 }
 
-
                             </div>
 
+
                         </div>
+
+
                     )
                 })}
+
             </div>
+
+
         </div>
     )
 }

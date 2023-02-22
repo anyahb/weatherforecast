@@ -43,18 +43,10 @@
 }
 
 .container {
-    display: flex;
-    justify-content: space-between;
+    justify-content: center;
     padding: 10px 15px;
-
 }
 
-.forecast-day {
-    border: pink 2px solid;
-    width: 200px;
-    padding: 15px;
-
-}
 
 .forecast__temperature {
     font-family: reg-roboto, arial, sans-serif;
@@ -62,24 +54,207 @@
     color: #202124;
 }
 
-.forecast__title {
+.forecast-day__date {
     font-family: reg-roboto, arial, sans-serif;
     color: #202124;
     font-size: 22px;
+    margin-bottom: 10px;
+    font-weight: bold;
 }
+
+.secondDay__date {
+    font-family: reg-roboto, arial, sans-serif;
+    color: #202124;
+    font-size: 22px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.thirdDay__date {
+    font-family: reg-roboto, arial, sans-serif;
+    color: #202124;
+    font-size: 22px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+
+
+
+
 
 .forecast {
     display: flex;
     align-items: center;
-    gap: 15px;
-    justify-content: space-between;
+    gap: 50px;
+    justify-content: center;
     margin: 20px;
 }
 
 .forecast__left {
     color: #70757a;
-    font-family: reg-roboto, arial,sans-serif;
+    font-family: reg-roboto, arial, sans-serif;
     font-size: 12px;
     display: flex;
     gap: 15px;
+}
+
+.forecast-day__hourtemp {
+    display: grid;
+    gap: 10px;
+    overflow-x: scroll;
+}
+
+.forecast-day__title {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.forecast-day__date {
+    font-style: italic;
+}
+
+.secondDay__date {
+    font-style: italic;
+}
+
+.thirdDay__date {
+    font-style: italic;
+}
+
+.secondDay {
+
+}
+
+.thirdDay__container {
+    display: grid;
+    gap: 10px;
+}
+
+.secondDay__container {
+    display: grid;
+    gap: 10px;
+}
+
+.forecast-day__precip {
+    width: 20px;
+    height: 20px;
+}
+
+.forecast-day__container {
+    display: flex;
+    width: 100%;
+    gap: 100px;
+    font-family: reg-roboto, arial, sans-serif;
+    background: #dee0e3;
+    align-items: center;
+    border-radius: 20px;
+}
+
+.forecast-day__condition {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.forecast-day__precipitation {
+    display: flex;
+    gap: 10px;
+}
+
+.secondDay__content {
+    display: flex;
+    width: 100%;
+    gap: 100px;
+    font-family: reg-roboto, arial, sans-serif;
+    background: #dee0e3;
+    align-items: center;
+    border-radius: 20px;
+}
+
+.secondDay__content div {
+    width: 120px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px;
+}
+
+.secondDay__condition {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.secondDay__precipitation {
+    display: flex;
+    gap: 10px;
+}
+
+
+
+.thirdDay__content {
+    display: flex;
+    width: 100%;
+    gap: 100px;
+    font-family: reg-roboto, arial, sans-serif;
+    background: #dee0e3;
+    align-items: center;
+    border-radius: 20px;
+}
+
+.thirdDay__content div{
+    width: 120px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px;
+}
+
+.thirdDay__condition {
+    width: 100px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.thirdDay__precipitation {
+    display: flex;
+    gap: 10px;
+}
+
+.forecast-day {
+    margin-bottom: 40px;
+}
+
+.secondDay {
+    margin-bottom: 40px;
+}
+
+.thirdDay {
+    margin-bottom: 40px;
+}
+
+.forecast-day__container div {
+    width: 20%;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px;
+}
+
+.forecast-day__temperature {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.secondDay_temperature {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.thirdDay__temperature {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.forecast__title {
+    font-size: 28px;
 }
