@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react"
+import {useEffect, useState} from "react"
 import './App.css'
 import Precipitation from './img/kek.png'
 
@@ -6,7 +6,6 @@ import Precipitation from './img/kek.png'
 function App() {
 
     const [forecastDays, setForecastDays] = useState([])
-    const [avgTemp, setavgTemp] = useState("")
     const [forecastIcon, setForecastIcon] = useState("")
     const [forecastLocation, setForecastLocation] = useState("")
     const [temperature, setTemperature] = useState("0")
@@ -15,13 +14,12 @@ function App() {
 
 
     const getWeather = () => {
-        fetch("http://api.weatherapi.com/v1/forecast.json?key=90bcae4386e744f082d174730222407&q=Washington DC&days=3")
+        fetch("http://api.weatherapi.com/v1/forecast.json?key=90bcae4386e744f082d174730222407&q=Washington DC&days")
             .then((response) => {
                 return response.json()
             })
 
             .then((res) => {
-                console.log("now", res.forecast.forecastday)
                 setForecastDays(res.forecast.forecastday)
 
                 getTime(res.forecast.forecastday)
@@ -58,21 +56,6 @@ function App() {
         getAllDays()
     }, [])
 
-
-    const avgTempt = () => {
-        let avg = forecastDays.map((x => x.date + " : " + x.day.avgtemp_c))
-        console.log(forecastDays)
-        setavgTemp(avg)
-    }
-
-
-    const createTime = (str) => {
-        const hey = str.split(":")
-        if (parseInt(hey[0]) < 13) {
-            const num = parseInt(hey[0]) + 12
-            return num + ":" + hey[1]
-        }
-    }
 
     const dateFormat = (el) => {
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -128,11 +111,8 @@ function App() {
 
     const getHours = (item) => {
         const onlyHours = item.split(" ")
-        const timeStr = onlyHours[1]
-        return timeStr
+        return onlyHours[1]
     }
-
-    console.log("forecastDays", forecastDays)
 
 
 
@@ -146,7 +126,7 @@ function App() {
             <button onClick={avgTempt}>Average Temperature</button>*/}
 
 
-            {forecastDays.map((item, index) => {
+            {forecastDays.map((item) => {
                 return (
 
                     <div className="forecast">
@@ -155,7 +135,7 @@ function App() {
                         <div className="forecast__left">
 
 
-                            <img className='forecast__icon' src={forecastIcon}></img>
+                            <img className='forecast__icon' src={forecastIcon} alt=""></img>
 
                             <div className='forecast__temperature'>
                                 {temperature}°
@@ -188,36 +168,17 @@ function App() {
             })}
 
 
-
-
-
             <div className='container'>
 
                 {forecastDays.map((item, index) => {
 
 
-
                     return (
                         <div key={index} className="forecast-day">
-                            {/*    <div className="forecast-day__temp">
-                                Average temperature: {item.day.avgtemp_c}
-                            </div>
-
-                            <div>
-                                Sunrise: {item.astro.sunrise}
-                            </div>
-
-                            <div>
-                                Sunset: {createTime(item.astro.sunset)}
-
-                            </div>*/}
-
                             <div className="forecast-day__hourtemp">
-
-
                                 <div className="forecast-day__date">{day}, {dateFormat(item.date)}</div>
                                 {
-                                    result.map((elem, index) => {
+                                    result.map((elem) => {
 
                                         return (
                                             <div className="forecast-day__container">
@@ -229,7 +190,7 @@ function App() {
 
                                                 <div className="forecast-day__condition">
                                                     {elem.condition.text}
-                                                    <img src={elem.condition.icon}></img>
+                                                    <img src={elem.condition.icon} alt=""></img>
                                                 </div>
 
 
@@ -262,8 +223,100 @@ function App() {
                     )
                 })}
 
-            </div>
 
+                <div className="secondDay">
+
+                    {allDays.slice(1, 2).map((item) => {
+
+                        return (
+
+                            <div className="secondDay__container">
+                                <div className="secondDay__date">{day}, {dateFormat(item.date)}</div>
+
+                                {item.hour.map((item) => {
+                                    return (
+                                        <div className="secondDay__content">
+                                            <div className="secondDay__precipitation">
+                                                {getHours(item.time)}
+                                            </div>
+
+                                            <div className="secondDay_temperature">
+                                                {item.temp_f}
+                                            </div>
+
+                                            <div className="secondDay__condition">
+                                                {item.condition.text}
+                                                <img src={item.condition.icon} alt=""></img>
+                                            </div>
+
+                                            <div className="secondDay__precipitation">
+                                                <img src={Precipitation} alt="precipitation"/>
+                                                <div>{item.precip_in}%</div>
+                                            </div>
+
+                                            <div className="secondDay__wind">{item.wind_mph} mph</div>
+
+                                        </div>
+                                    )
+
+                                })}
+
+                            </div>
+                        )
+                    })}
+                </div>
+
+
+
+                <div className="thirdDay">
+                    {allDays.slice(2, 3).map((item) => {
+                        return (
+
+                            <div className="thirdDay__container">
+
+                                <div className="thirdDay__date">{day}, {dateFormat(item.date)}</div>
+
+                                {item.hour.map((item) => {
+                                    return (
+                                        <div className="thirdDay__content">
+
+                                            <div className="thirdDay__hours">
+                                                {getHours(item.time)}
+                                            </div>
+
+
+                                            <div className="thirdDay__temperature">
+                                                {item.temp_f}
+                                            </div>
+
+
+                                            <div className="thirdDay__condition">
+                                                {item.condition.text}
+                                                <img src={item.condition.icon} alt=""></img>
+                                            </div>
+
+
+
+                                            <div className="thirdDay__precipitation">
+                                                <img src={Precipitation} alt="precipitation"/>
+                                                <div>{item.precip_in}%</div>
+                                            </div>
+
+                                            <div className="thirdDay__wind">
+                                                <div>{item.wind_mph} mph</div>
+                                            </div>
+
+
+                                        </div>
+                                    )
+                                })}
+
+                            </div>
+                        )
+                    })}
+                </div>
+
+            </div>
 
         </div>
     )
