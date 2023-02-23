@@ -1,3 +1,7 @@
+body {
+    background: #E5EAF5;
+}
+
 .App {
     text-align: center;
 }
@@ -216,10 +220,10 @@
     display: grid;
     width: 300px;
     font-family: reg-roboto, arial, sans-serif;
-    background: #dee0e3;
+    background: #a0d2eb;
     align-items: center;
     border-radius: 20px;
-    height: 300px;
+    height: 250px;
     justify-items: center;
 }
 
@@ -239,11 +243,11 @@
     display: grid;
     width: 300px;
     font-family: reg-roboto, arial, sans-serif;
-    background: #dee0e3;
     align-items: center;
     border-radius: 20px;
-    height: 300px;
+    height: 250px;
     justify-items: center;
+    background: #a0d2eb;
 }
 
 .secondDay__condition {
@@ -278,10 +282,10 @@
     display: grid;
     width: 300px;
     font-family: reg-roboto, arial, sans-serif;
-    background: #dee0e3;
+    background: #a0d2eb;
     align-items: center;
     border-radius: 20px;
-    height: 300px;
+    height: 250px;
     justify-items: center;
 }
 
@@ -330,4 +334,28 @@
 
 .forecast__title {
     font-size: 28px;
+}
+
+@media (max-width: 600px) {
+    .forecast {
+        display: grid;
+    }
+
+    .forecast-day__date {
+        display: flex;
+        justify-content: center;
+    }
+
+
+    .secondDay__date {
+        display: flex;
+        justify-content: center;
+    }
+
+    .thirdDay__date {
+        display: flex;
+        justify-content: center;
+    }
+
+
 }
