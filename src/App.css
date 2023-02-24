@@ -1,5 +1,12 @@
 body {
     background: #E5EAF5;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#root {
+    max-width: 1280px;
 }
 
 .App {
@@ -12,13 +19,13 @@ body {
 }
 
 @font-face {
-    font-family: reg-roboto;
-    src: url("../fonts/Roboto-Regular.ttf");
+    font-family: clock;
+    src: url("../fonts/digital.ttf");
 }
 
 @font-face {
-    font-family: clock;
-    src: url("../fonts/digital.ttf");
+    font-family: exo;
+    src: url("../fonts/exo.ttf");
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -58,38 +65,36 @@ body {
 
 
 .forecast__temperature {
-    font-family: reg-roboto, arial, sans-serif;
     font-size: 48px;
     color: #202124;
 }
 
 .forecast-day__date {
-    font-family: reg-roboto, arial, sans-serif;
-    color: #202124;
-    font-size: 22px;
+    font-family: exo;
     margin-bottom: 10px;
     font-weight: bold;
+    color: #6643b5;
+    font-size: 28px;
 }
 
 .secondDay__date {
-    font-family: reg-roboto, arial, sans-serif;
-    color: #202124;
-    font-size: 22px;
+    font-family: exo;
     margin-bottom: 10px;
     font-weight: bold;
+    color: #6643b5;
+    font-size: 28px;
 }
 
 .thirdDay__date {
-    font-family: reg-roboto, arial, sans-serif;
-    color: #202124;
-    font-size: 22px;
+    font-family: exo;
     margin-bottom: 10px;
     font-weight: bold;
+    color: #6643b5;
+    font-size: 28px;
 }
 
 .forecast-day__hours {
     background-image: url("./img/alarmclock.png");
-    width: 100%;
     height: 90px;
     background-repeat: no-repeat;
     width: 150px;
@@ -105,6 +110,8 @@ body {
     grid-template-columns: 1fr 1fr;
     align-items: center;
     justify-items: center;
+    width: 100%;
+    font-family: 'exo';
 }
 
 
@@ -116,16 +123,18 @@ body {
     display: flex;
     align-items: center;
     gap: 50px;
-    justify-content: center;
+    justify-content: space-between;
     margin: 20px;
+    color: #6643b5;
+
 }
 
 .forecast__left {
-    color: #70757a;
-    font-family: reg-roboto, arial, sans-serif;
     font-size: 12px;
     display: flex;
     gap: 15px;
+    color: #323643;
+    font-family: 'exo';
 }
 
 .forecast-day__hourtemp {
@@ -141,18 +150,10 @@ body {
     font-weight: bold;
 }
 
-.forecast-day__date {
-    font-style: italic;
-}
-
-.secondDay__date {
-    font-style: italic;
-}
 
 
 .secondDay__time {
     background-image: url("./img/alarmclock.png");
-    width: 100%;
     height: 90px;
     background-repeat: no-repeat;
     width: 150px;
@@ -164,7 +165,6 @@ body {
 
 .thirdDay__hours {
     background-image: url("./img/alarmclock.png");
-    width: 100%;
     height: 90px;
     background-repeat: no-repeat;
     width: 150px;
@@ -172,10 +172,6 @@ body {
     padding-top: 25px;
     font-size: 40px;
     font-family: clock;
-}
-
-.thirdDay__date {
-    font-style: italic;
 }
 
 .secondDay {
@@ -203,6 +199,8 @@ body {
     grid-template-columns: 1fr 1fr;
     align-items: center;
     justify-items: center;
+    width: 100%;
+    font-family: 'exo';
 }
 
 .thirdDay__condition {
@@ -219,12 +217,12 @@ body {
 .forecast-day__container {
     display: grid;
     width: 300px;
-    font-family: reg-roboto, arial, sans-serif;
-    background: #a0d2eb;
     align-items: center;
     border-radius: 20px;
     height: 250px;
     justify-items: center;
+    border: 1px solid #0881a3;
+    background: #9dc6ff;
 }
 
 .forecast-day__condition {
@@ -242,12 +240,12 @@ body {
 .secondDay__content {
     display: grid;
     width: 300px;
-    font-family: reg-roboto, arial, sans-serif;
     align-items: center;
     border-radius: 20px;
     height: 250px;
     justify-items: center;
-    background: #a0d2eb;
+    border: 1px solid #0881a3;
+    background: #9dc6ff;
 }
 
 .secondDay__condition {
@@ -262,6 +260,8 @@ body {
     grid-template-columns: 1fr 1fr;
     align-items: center;
     justify-items: center;
+    width: 100%;
+    font-family: 'exo';
 }
 
 
@@ -281,12 +281,12 @@ body {
 .thirdDay__content {
     display: grid;
     width: 300px;
-    font-family: reg-roboto, arial, sans-serif;
-    background: #a0d2eb;
     align-items: center;
     border-radius: 20px;
     height: 250px;
     justify-items: center;
+    border: 1px solid #0881a3;
+    background: #9dc6ff;
 }
 
 
@@ -333,7 +333,22 @@ body {
 }
 
 .forecast__title {
-    font-size: 28px;
+    font-size: 50px;
+    font-weight: bold;
+    font-family: 'clock';
+}
+
+
+.forecast__city {
+    color: #430f58;
+}
+
+.forecast__weekday {
+    color: #430f58;
+}
+
+.forecast__time {
+    color: #430f58;
 }
 
 @media (max-width: 600px) {
