@@ -374,3 +374,42 @@ body {
 
 
 }
+
+
+@media (max-width: 480px) {
+
+    .forecast-day__date {
+        font-size: 20px;
+    }
+
+
+    .secondDay__date {
+        font-size: 20px;
+    }
+
+    .thirdDay__date {
+        font-size: 20px;
+    }
+
+    .forecast {
+        justify-content: center;
+    }
+
+    .forecast__title {
+        font-size: 40px;
+        text-align: center;
+    }
+
+    .forecast__city {
+        text-align: center;
+    }
+
+    .forecast__weekday {
+        text-align: center;
+    }
+
+    .forecast__time {
+        text-align: center;
+    }
+
+}

@@ -8,13 +8,13 @@ function App() {
     const [forecastDays, setForecastDays] = useState([])
     const [forecastIcon, setForecastIcon] = useState("")
     const [forecastLocation, setForecastLocation] = useState("")
-    const [temperature, setTemperature] = useState("0")
-    const [result, setResult] = useState("0")
+    const [temperature, setTemperature] = useState("")
+    const [result, setResult] = useState([])
     const [allDays, setAllDays] = useState([])
 
 
     const getWeather = () => {
-        fetch("https://api.weatherapi.com/v1/forecast.json?key=90bcae4386e744f082d174730222407&q=Washington DC&days")
+        fetch("http://api.weatherapi.com/v1/forecast.json?key=90bcae4386e744f082d174730222407&q=Washington DC&days")
             .then((response) => {
                 return response.json()
             })
@@ -35,7 +35,7 @@ function App() {
 
 
     const getAllDays = () => {
-        fetch("https://api.weatherapi.com/v1/forecast.json?key=90bcae4386e744f082d174730222407&q=Washington DC&days=3")
+        fetch("http://api.weatherapi.com/v1/forecast.json?key=90bcae4386e744f082d174730222407&q=Washington DC&days=3")
             .then((response) => {
                 return response.json()
             })
@@ -91,7 +91,13 @@ function App() {
             const onlyHours = wholeTime.split(" ")
             const timeStr = onlyHours[1]
             const responseHour = timeStr.split(":")[0]
-            return responseHour === currentHour.toString()
+            console.log("reshour", responseHour)
+            console.log('curhour', currentHour)
+            if (currentHour.toString().length === 1) {
+                return responseHour === "0" + currentHour.toString()
+            } else {
+                return  responseHour === currentHour.toString()
+            }
         })
 
         const laterHours = timeArray.filter(item => {
@@ -99,20 +105,30 @@ function App() {
             const onlyHours = wholeTime.split(" ")
             const timeStr = onlyHours[1]
             const responseHour = timeStr.split(":")[0]
-            return responseHour >= currentHour.toString()
+
+            if (currentHour.toString().length === 1) {
+                return responseHour >= "0" + currentHour.toString()
+            } else {
+                return  responseHour >= currentHour.toString()
+            }
         })
 
-        const temperature = currentWeather?.temp_f
-        setTemperature(temperature)
-        console.log(temperature)
+        const temp = currentWeather?.temp_f
+        setTemperature(temp)
         setResult(laterHours)
     }
+
+
 
 
     const getHours = (item) => {
         const onlyHours = item.split(" ")
         return onlyHours[1]
     }
+
+    console.log(temperature)
+
+    console.log("result", result)
 
 
     return (
@@ -158,13 +174,11 @@ function App() {
 
                                 {
                                     result.map((elem) => {
-
                                         return (
                                             <div className="forecast-day__container">
                                                 <div className="forecast-day__hours">
                                                     {getHours(elem.time)}
                                                 </div>
-
 
                                                 <div className="forecast-day__output">
 
@@ -175,26 +189,18 @@ function App() {
                                                         {elem.condition.text}
                                                         <img src={elem.condition.icon} alt=""></img>
                                                     </div>
-
-
                                                     <div className="forecast-day__precipitation">
                                                         <img src={Precipitation} alt="precipitation"/>
                                                         <div>{elem.precip_in}%</div>
                                                     </div>
-
                                                     <div className="forecast-day__wind">
                                                         <div>
                                                             {elem.wind_mph} mph
                                                         </div>
                                                     </div>
-
                                                 </div>
-
-
                                             </div>
-
-
-                                        )
+                                        );
                                     })
 
                                 }
