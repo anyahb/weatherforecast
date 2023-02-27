@@ -1,29 +1,20 @@
-import {useState, useEffect} from "react"
+import {useEffect, useState} from "react"
 import './App.css'
+import Precipitation from './img/kek.png'
 
 
 function App() {
 
     const [forecastDays, setForecastDays] = useState([])
-    const [avgTemp, setavgTemp] = useState("")
     const [forecastIcon, setForecastIcon] = useState("")
     const [forecastLocation, setForecastLocation] = useState("")
-    const [temperature, setTemperature] = useState("0")
-    const [result, setResult] = useState("0")
-
-    // fact
-    const [forecastTime, setForecastTime] = useState("")
-    // fact
-
-
-// fact
-
-
-    // fact
+    const [temperature, setTemperature] = useState("")
+    const [result, setResult] = useState([])
+    const [allDays, setAllDays] = useState([])
 
 
     const getWeather = () => {
-        fetch("http://api.weatherapi.com/v1/forecast.json?key=90bcae4386e744f082d174730222407&q=Washington DC&days=1")
+        fetch("https://api.weatherapi.com/v1/forecast.json?key=90bcae4386e744f082d174730222407&q=Washington DC&days")
             .then((response) => {
                 return response.json()
             })
@@ -40,7 +31,18 @@ function App() {
                 const finalLocation = `${res.location.name}, ${res.location.region}`
                 setForecastLocation(finalLocation)
             })
+    }
 
+
+    const getAllDays = () => {
+        fetch("https://api.weatherapi.com/v1/forecast.json?key=90bcae4386e744f082d174730222407&q=Washington DC&days=3")
+            .then((response) => {
+                return response.json()
+            })
+
+            .then((res) => {
+                setAllDays(res.forecast.forecastday)
+            })
     }
 
 
@@ -48,34 +50,22 @@ function App() {
         getWeather()
     }, [])
 
+    useEffect(() => {
+        getAllDays()
+    }, [])
 
-    const avgTempt = () => {
-        let avg = forecastDays.map((x => x.date + " : " + x.day.avgtemp_c))
-        setavgTemp(avg)
-    }
-
-
-    const createTime = (str) => {
-        const hey = str.split(":")
-        if (parseInt(hey[0]) < 13) {
-            const num = parseInt(hey[0]) + 12
-            return num + ":" + hey[1]
-        }
-    }
 
     const dateFormat = (el) => {
-        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-        const sorter = el.split("-")
-        const hey = sorter[1].slice(1)
-        const resultMonths = months[parseInt(hey) - 1]
-        const num = sorter[2] * 1
-        const year = sorter[0]
-        return `${num} ` + `${resultMonths} ` + `${year}`
-    }
-
-
-    const hourTemp = () => {
-
+        if (el) {
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+            const sorter = el.split("-")
+            const hey = sorter[1].slice(1)
+            const resultMonths = months[parseInt(hey) - 1]
+            const num = sorter[2] * 1
+            const year = sorter[0]
+            return `${num} ` + `${resultMonths} ` + `${year}`
+        }
+        return ""
     }
 
 
@@ -84,9 +74,9 @@ function App() {
     let day = weekday[d.getDay()];
     let time = new Date().toLocaleTimeString([], {hour: '2-digit', minute: "2-digit"})
 
-    // const currentHour = new Date().getHours()
+
     const currentDay = forecastDays[0]
-    // const timeArray = currentDay?.hour ?? []
+
 
     let getTime = (el) => {
         const currentHour = new Date().getHours()
@@ -98,7 +88,11 @@ function App() {
             const onlyHours = wholeTime.split(" ")
             const timeStr = onlyHours[1]
             const responseHour = timeStr.split(":")[0]
-            return responseHour === currentHour.toString()
+            if (currentHour.toString().length === 1) {
+                return responseHour === "0" + currentHour.toString()
+            } else {
+                return responseHour === currentHour.toString()
+            }
         })
 
         const laterHours = timeArray.filter(item => {
@@ -106,113 +100,109 @@ function App() {
             const onlyHours = wholeTime.split(" ")
             const timeStr = onlyHours[1]
             const responseHour = timeStr.split(":")[0]
-            return responseHour >= currentHour.toString()
+
+            if (currentHour.toString().length === 1) {
+                return responseHour >= "0" + currentHour.toString()
+            } else {
+                return responseHour >= currentHour.toString()
+            }
         })
 
-        const temperature = currentWeather?.temp_f
-        setTemperature(temperature)
-
+        const temp = currentWeather?.temp_f
+        setTemperature(temp)
         setResult(laterHours)
-
     }
 
 
+    const getHours = (item) => {
+        const onlyHours = item.split(" ")
+        return onlyHours[1]
+    }
+
     return (
         <div>
-            {/*<input type="text" placeholder="type the number of days"/>
 
+            <div className="forecast">
+                <div className="forecast__left">
+                    <img className='forecast__icon' src={forecastIcon} alt=""></img>
 
-            <button onClick={avgTempt}>Average Temperature</button>*/}
-
-
-            {forecastDays.map((item, index) => {
-                return (
-
-                    <div className="forecast">
-
-
-                        <div className="forecast__left">
-
-
-                            <img className='forecast__icon' src={forecastIcon}></img>
-
-                            <div className='forecast__temperature'>
-                                {temperature}°
-                            </div>
-
-
-                            <div className="forecast__additional">
-                                <div className="forecast__precipitation">Precipitation: {item.hour[0].precip_in}%</div>
-                                <div className="forecast__humidity">Humidity: {item.hour[0].humidity}%</div>
-                                <div className="forecast__wind">Wind: {item.hour[0].wind_mph} mph</div>
-                                {/*  <div className="forecast__temp">Temperature Now: {temperature}°</div>*/}
-                            </div>
-
-                        </div>
-
-                        <div className="forecast__right">
-                            <div className="forecast__title">Weather</div>
-                            <div className="forecast__city">{forecastLocation}</div>
-                            <div className="forecast__weekday">{day}, {dateFormat(item.date)}</div>
-                            <div className="forecast__time">{time}</div>
-
-                        </div>
+                    <div className='forecast__temperature'>
+                        {temperature}°
                     </div>
-
-                )
-            })}
-
-
-            <div className='container'>
-
-                {forecastDays.map((item, index) => {
-
-
-                    return (
-                        <div key={index} className="forecast-day">
-                            {/*    <div className="forecast-day__temp">
-                                Average temperature: {item.day.avgtemp_c}
-                            </div>
-
+                    <div className="forecast__additional">
+                        <div className="forecast__precipitation">Precipitation: {currentDay?.hour[0]?.precip_in}%</div>
+                        <div className="forecast__humidity">Humidity: {currentDay?.hour[0]?.humidity}%</div>
+                        <div className="forecast__wind">
                             <div>
-                                Sunrise: {item.astro.sunrise}
+                                Wind: {currentDay?.hour[0]?.wind_mph} mph
                             </div>
-
-                            <div>
-                                Sunset: {createTime(item.astro.sunset)}
-
-                            </div>*/}
-
-                            <div className="forecast-day__hourtemp">
-                                Average Temperature:
-                                {
-                                    result.map((elem, index) => {
-
-                                        return (
-
-                                            //
-                                            // {/* <div key={index}>
-                                            //      Hour: {everydayHour}
-                                            //  </div>*/}
-
-                                            <div>
-                                                <div> Hours: {elem.time}</div>
-                                                <div>Temperature: {elem.temp_f}°</div>
-                                            </div>
-
-
-                                        )
-                                    })
-
-                                }
-
-
-                            </div>
-
                         </div>
+                        {/*  <div className="forecast__temp">Temperature Now: {temperature}°</div>*/}
+                    </div>
+                </div>
+                <div className="forecast__right">
+                    <div className="forecast__title">Hourly Weather</div>
+                    <div className="forecast__city">{forecastLocation}</div>
+                    <div className="forecast__weekday">{day}, {dateFormat(currentDay?.date)}</div>
+                    <div className="forecast__time">{time}</div>
+                </div>
+            </div>
+
+
+            <div className="container">
+                {allDays.map((item, func) => {
+                    {
+                        if (item === allDays[0]) {
+
+                            func = result
+
+                        } else {
+                            func = item.hour
+
+                        }
+                        return (
+                            <div className="forecast-day">
+                                <div className="forecast-day__date">{day}, {dateFormat(item.date)}</div>
+                                <div className="forecast-day__block">
+                                    {
+                                        func.map((elem) => {
+                                                return (
+                                                    <div className="forecast-day__container">
+                                                        <div className="forecast-day__hours">
+                                                            {getHours(elem.time)}
+                                                        </div>
+
+                                                        <div className="forecast-day__output">
+
+                                                            <div className="forecast-day__temperature">{elem.temp_f}°</div>
+
+
+                                                            <div className="forecast-day__condition">
+                                                                {elem.condition.text}
+                                                                <img src={elem.condition.icon} alt=""></img>
+                                                            </div>
+                                                            <div className="forecast-day__precipitation">
+                                                                <img src={Precipitation} alt="precipitation"/>
+                                                                <div>{elem.precip_in}%</div>
+                                                            </div>
+                                                            <div className="forecast-day__wind">
+                                                                <div>
+                                                                    {elem.wind_mph} mph
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            }
+                                        )
+                                    }
+                                </div>
+                            </div>
                     )
+                    }
                 })}
             </div>
+
         </div>
     )
 }
